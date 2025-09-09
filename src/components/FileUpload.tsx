@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, FileText } from 'lucide-react';
 
 interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -45,62 +45,77 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   }, [onFilesSelected]);
 
   return (
-    <div className="w-full space-y-6">
+    <div className="space-y-6">
       <div
-        className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 ${
           isDragOver
-            ? 'border-green-400 bg-green-50'
-            : 'border-gray-300 hover:border-gray-400'
+            ? 'border-emerald-400 bg-emerald-50 scale-[1.02]'
+            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-          Drop your mod files here
-        </h3>
-        <p className="text-gray-500 mb-4">
-          Or click to browse for .jar and .zip files
-        </p>
-        <input
-          type="file"
-          multiple
-          accept=".jar,.zip"
-          onChange={handleFileInput}
-          className="hidden"
-          id="file-input"
-        />
-        <label
-          htmlFor="file-input"
-          className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors cursor-pointer"
-        >
-          Browse Files
-        </label>
+        <div className="flex flex-col items-center">
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${
+            isDragOver ? 'bg-emerald-100' : 'bg-gray-100'
+          }`}>
+            <Upload className={`h-8 w-8 transition-colors ${
+              isDragOver ? 'text-emerald-600' : 'text-gray-400'
+            }`} />
+          </div>
+          
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            Drop your mod files here
+          </h3>
+          <p className="text-gray-500 mb-6 max-w-sm">
+            Upload .jar and .zip files to automatically detect and update your Minecraft mods
+          </p>
+          
+          <input
+            type="file"
+            multiple
+            accept=".jar,.zip"
+            onChange={handleFileInput}
+            className="hidden"
+            id="file-input"
+          />
+          <label
+            htmlFor="file-input"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-lg font-medium hover:from-emerald-600 hover:to-teal-700 transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Browse Files
+          </label>
+        </div>
       </div>
 
       {selectedFiles.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="p-4 border-b border-gray-200">
-            <h4 className="font-semibold text-gray-800">
-              Selected Files ({selectedFiles.length})
-            </h4>
-          </div>
-          <div className="p-4 space-y-2 max-h-64 overflow-y-auto">
+        <div className="space-y-3">
+          <h4 className="font-semibold text-gray-800 flex items-center">
+            <FileText className="h-5 w-5 mr-2 text-gray-600" />
+            Selected Files ({selectedFiles.length})
+          </h4>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
             {selectedFiles.map((file, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 hover:bg-gray-100 transition-colors"
               >
-                <div className="flex-1">
-                  <p className="font-medium text-gray-800">{file.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800 truncate max-w-xs">{file.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => onRemoveFile(index)}
-                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors"
+                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>

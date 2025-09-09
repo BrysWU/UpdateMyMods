@@ -14,7 +14,7 @@ function App() {
   const [detectedMods, setDetectedMods] = useState<DetectedMod[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedVersions, setSelectedVersions] = useState<string[]>(['1.20.4']);
-  const [selectedLoaders, setSelectedLoaders] = useState<string[]>(['fabric']);
+  const [selectedLoaders, setSelectedLoaders] = useState<string[]>(['forge']);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
   const [currentMod, setCurrentMod] = useState('');

@@ -9,14 +9,38 @@ interface VersionSelectorProps {
 }
 
 const MINECRAFT_VERSIONS = [
-  '1.20.4', '1.20.3', '1.20.2', '1.20.1', '1.20',
-  '1.19.4', '1.19.3', '1.19.2', '1.19.1', '1.19',
-  '1.18.2', '1.18.1', '1.18',
-  '1.17.1', '1.17',
-  '1.16.5', '1.16.4', '1.16.3', '1.16.2', '1.16.1', '1.16',
-  '1.15.2', '1.15.1', '1.15',
-  '1.14.4', '1.14.3', '1.14.2', '1.14.1', '1.14',
-  '1.12.2', '1.12.1', '1.12',
+  { version: '1.20.4', popular: true },
+  { version: '1.20.3', popular: false },
+  { version: '1.20.2', popular: false },
+  { version: '1.20.1', popular: true },
+  { version: '1.20', popular: false },
+  { version: '1.19.4', popular: false },
+  { version: '1.19.3', popular: false },
+  { version: '1.19.2', popular: true },
+  { version: '1.19.1', popular: false },
+  { version: '1.19', popular: false },
+  { version: '1.18.2', popular: true },
+  { version: '1.18.1', popular: false },
+  { version: '1.18', popular: false },
+  { version: '1.17.1', popular: false },
+  { version: '1.17', popular: false },
+  { version: '1.16.5', popular: true },
+  { version: '1.16.4', popular: false },
+  { version: '1.16.3', popular: false },
+  { version: '1.16.2', popular: false },
+  { version: '1.16.1', popular: false },
+  { version: '1.16', popular: false },
+  { version: '1.15.2', popular: false },
+  { version: '1.15.1', popular: false },
+  { version: '1.15', popular: false },
+  { version: '1.14.4', popular: false },
+  { version: '1.14.3', popular: false },
+  { version: '1.14.2', popular: false },
+  { version: '1.14.1', popular: false },
+  { version: '1.14', popular: false },
+  { version: '1.12.2', popular: true },
+  { version: '1.12.1', popular: false },
+  { version: '1.12', popular: false },
 ];
 
 const MOD_LOADERS = [
@@ -33,11 +57,8 @@ export const VersionSelector: React.FC<VersionSelectorProps> = ({
   onLoadersChange
 }) => {
   const handleVersionChange = (version: string) => {
-    if (selectedVersions.includes(version)) {
-      onVersionsChange(selectedVersions.filter(v => v !== version));
-    } else {
-      onVersionsChange([...selectedVersions, version]);
-    }
+    // Only allow one version selection at a time
+    onVersionsChange([version]);
   };
 
   const handleLoaderChange = (loader: string) => {
@@ -59,23 +80,32 @@ export const VersionSelector: React.FC<VersionSelectorProps> = ({
         <div>
           <div className="flex items-center mb-4">
             <Gamepad2 className="h-5 w-5 text-gray-600 mr-2" />
-            <h4 className="text-lg font-semibold text-gray-800">Target Minecraft Versions</h4>
+            <h4 className="text-lg font-semibold text-gray-800">Target Minecraft Version</h4>
+            <span className="ml-2 text-sm text-gray-500">(Select one)</span>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3">
-            {MINECRAFT_VERSIONS.map(version => (
+            {MINECRAFT_VERSIONS.map(({ version, popular }) => (
               <label key={version} className="relative cursor-pointer">
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="minecraft-version"
                   checked={selectedVersions.includes(version)}
                   onChange={() => handleVersionChange(version)}
                   className="sr-only"
                 />
-                <div className={`px-3 py-2 rounded-lg text-center text-sm font-medium transition-all duration-200 ${
+                <div className={`relative px-3 py-2 rounded-lg text-center text-sm font-medium transition-all duration-200 ${
                   selectedVersions.includes(version)
                     ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md transform scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}>
                   {version}
+                  {popular && (
+                    <div className="absolute -top-1 -right-1">
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 border border-orange-200">
+                        Popular
+                      </span>
+                    </div>
+                  )}
                 </div>
               </label>
             ))}
@@ -83,7 +113,7 @@ export const VersionSelector: React.FC<VersionSelectorProps> = ({
           {selectedVersions.length === 0 && (
             <p className="text-sm text-red-500 mt-3 flex items-center">
               <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-              Please select at least one Minecraft version
+              Please select a Minecraft version
             </p>
           )}
         </div>
